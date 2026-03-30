@@ -141,7 +141,16 @@ def query(label: str, question: str) -> dict:
     doc_id = get_doc_id(label)
 
     # Submit retrieval query
-    retrieval_resp = client.submit_query(doc_id=doc_id, query=question)
+    try:
+        retrieval_resp = client.submit_query(doc_id=doc_id, query=question)
+    except Exception as e:
+        if "Access denied" in str(e) or "access denied" in str(e).lower():
+            # Cached doc_id expired on PageIndex servers — clear cache and retry once
+            _cache_path(label).unlink(missing_ok=True)
+            doc_id = get_doc_id(label)
+            retrieval_resp = client.submit_query(doc_id=doc_id, query=question)
+        else:
+            raise
     retrieval_id = retrieval_resp["retrieval_id"]
 
     # Poll for retrieval result
