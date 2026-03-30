@@ -1,0 +1,37 @@
+# Environment
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+venv/
+.venv/
+env/
+
+# Uploaded user files — never commit these (arbitrary user PDFs)
+data/filings/up_*.pdf
+data/filings/up_*.txt
+data/filings/upload_*.pdf
+data/filings/upload_*.txt
+
+# PageIndex cache for uploaded files — also excluded
+data/pageindex_cache/up_*.json
+data/pageindex_cache/upload_*.json
+
+# Keep the pre-indexed filings and their caches (needed for cold start)
+!data/filings/AAPL_FY2024.pdf
+!data/filings/AAPL_FY2024.txt
+!data/filings/MSFT_FY2024.pdf
+!data/filings/MSFT_FY2024.txt
+!data/pageindex_cache/AAPL_FY2024.json
+!data/pageindex_cache/MSFT_FY2024.json
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS
+.DS_Store
+Thumbs.db

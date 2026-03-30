@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:arxiv.org)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:pageindex.ai)",
+      "WebFetch(domain:vectify.ai)",
+      "WebFetch(domain:docs.pageindex.ai)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:streamlit.io)",
+      "WebFetch(domain:console.groq.com)",
+      "WebFetch(domain:www.sec.gov)",
+      "Bash(pip --version)",
+      "Bash(wmic cpu:*)",
+      "Bash(python -m venv venv)",
+      "Bash(venv/Scripts/pip install:*)",
+      "Bash(venv/Scripts/python -c \"import pageindex; print\\(dir\\(pageindex\\)\\)\")",
+      "Bash(venv/Scripts/python -c \"from pageindex import PageIndexClient; import inspect; print\\(inspect.getmembers\\(PageIndexClient, predicate=lambda a: not inspect.isroutine\\(a\\)\\)\\); c = PageIndexClient\\(api_key=''test''\\); print\\(dir\\(c\\)\\)\")",
+      "Bash(venv/Scripts/python download_filings.py)",
+      "Bash(venv/Scripts/python -c \":*)",
+      "Bash(cd:*)",
+      "Bash(venv/Scripts/python test_traditional_rag.py)",
+      "Bash(venv/Scripts/python test_pageindex_rag.py)",
+      "Bash(venv/Scripts/python -c \"import reportlab; print\\(''reportlab ok''\\)\")",
+      "Bash(venv/Scripts/python test_both_pipelines.py)",
+      "Bash(venv/Scripts/python test_questions.py)",
+      "Bash(taskkill /F /IM streamlit.exe)",
+      "Bash(taskkill /F /IM python.exe /FI \"WINDOWTITLE eq streamlit*\")",
+      "Bash(venv/Scripts/python -c \"import markdown; print\\(''markdown ok''\\)\")",
+      "Bash(venv/Scripts/pip show:*)",
+      "Bash(python -c \":*)",
+      "Bash(python3:*)"
+    ]
+  }
+}

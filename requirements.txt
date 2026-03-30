@@ -1,0 +1,19 @@
+# PageIndex RAG
+pageindex
+
+# Traditional RAG
+chromadb
+sentence-transformers
+pypdf2
+
+# LLM
+groq
+
+# Frontend
+streamlit
+markdown
+
+# Utilities
+python-dotenv
+requests
+reportlab

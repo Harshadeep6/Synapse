@@ -1,0 +1,112 @@
+[
+  {
+    "id": "q1",
+    "type": "simple_lookup",
+    "difficulty": "easy",
+    "label": "AAPL_FY2024",
+    "question": "What was Apple's total net sales (revenue) for fiscal year 2024?",
+    "ground_truth": "$391,035 million ($391.0 billion)",
+    "ground_truth_keywords": ["391,035", "391.0"],
+    "explanation": "Direct lookup from the Consolidated Statements of Operations. Both systems should get this right.",
+    "why_interesting": "Baseline — a question so simple even chunked RAG handles it fine. Sets context before harder questions."
+  },
+  {
+    "id": "q2",
+    "type": "simple_lookup",
+    "difficulty": "easy",
+    "label": "AAPL_FY2024",
+    "question": "What was Apple's net income for fiscal year 2024?",
+    "ground_truth": "$93,736 million ($93.7 billion)",
+    "ground_truth_keywords": ["93,736", "93.7"],
+    "explanation": "Direct lookup from income statement. Both systems answer this correctly — used as the warm-up demo.",
+    "why_interesting": "Entry point for the demo. Both systems should agree, building trust before the contrast questions."
+  },
+  {
+    "id": "q3",
+    "type": "simple_lookup",
+    "difficulty": "easy",
+    "label": "AAPL_FY2024",
+    "question": "What was Apple's diluted earnings per share (EPS) for fiscal year 2024?",
+    "ground_truth": "$6.08 per diluted share",
+    "ground_truth_keywords": ["6.08"],
+    "explanation": "Found in the income statement alongside net income.",
+    "why_interesting": "Still straightforward but requires distinguishing basic ($6.11) from diluted ($6.08)."
+  },
+  {
+    "id": "q4",
+    "type": "cross_section",
+    "difficulty": "medium",
+    "label": "AAPL_FY2024",
+    "question": "What was Apple's Services revenue in fiscal 2024, and what gross margin did the Services segment achieve?",
+    "ground_truth": "Services revenue was $96,169 million. Services gross margin was 73.9%.",
+    "ground_truth_keywords": ["96,169", "73.9"],
+    "explanation": "Revenue is in the income statement; gross margin % is in the MD&A section — two different parts of the filing.",
+    "why_interesting": "Requires linking the revenue figure (Item 8) with the margin discussion (Item 7 MD&A). Chunked RAG often retrieves one but not both."
+  },
+  {
+    "id": "q5",
+    "type": "cross_section",
+    "difficulty": "medium",
+    "label": "AAPL_FY2024",
+    "question": "What was Apple's R&D spending in fiscal 2024, and what percentage of total revenue does that represent?",
+    "ground_truth": "R&D was $31,370 million, representing approximately 8% of total net sales of $391,035 million.",
+    "ground_truth_keywords": ["31,370", "8%", "8 %"],
+    "explanation": "R&D dollar amount is in the income statement; the percentage discussion is in the MD&A operating expenses section.",
+    "why_interesting": "The percentage is explicitly stated in MD&A (~15% of opex, ~8% of revenue). Chunked RAG often returns only the raw number without the context."
+  },
+  {
+    "id": "q6",
+    "type": "multi_hop",
+    "difficulty": "hard",
+    "label": "AAPL_FY2024",
+    "question": "Apple's effective tax rate was higher in fiscal 2024 than 2023. What was the primary reason, and how much did it cost the company?",
+    "ground_truth": "The primary reason was a one-time income tax charge of $10.2 billion (net) related to the European Commission State Aid Decision. This significantly increased the provision for income taxes from $16,741 million in FY2023 to $29,749 million in FY2024.",
+    "ground_truth_keywords": ["10.2 billion", "10.2", "State Aid", "29,749", "16,741"],
+    "explanation": "Requires finding: (1) tax rate comparison in MD&A, (2) the State Aid Decision explanation in the tax footnote (Note 7, Item 8), and (3) the actual tax provision figures from the income statement — three non-adjacent sections.",
+    "why_interesting": "THE money-shot question. Traditional RAG fails because 'effective tax rate' and 'State Aid Decision' appear in separate sections with no textual overlap. PageIndex navigates MD&A -> Tax Note -> Income Statement."
+  },
+  {
+    "id": "q7",
+    "type": "multi_hop",
+    "difficulty": "hard",
+    "label": "AAPL_FY2024",
+    "question": "What was Apple's iPhone revenue in fiscal 2024, and what risk factor in the filing specifically threatens iPhone's market position?",
+    "ground_truth": "iPhone revenue was $201,183 million in FY2024. A key risk factor is intense competition in the smartphone market — Apple holds a minority market share globally, and competitors with lower cost structures compete through aggressive pricing and by imitating Apple's products.",
+    "ground_truth_keywords": ["201,183", "minority market share", "aggressive pricing"],
+    "explanation": "iPhone revenue is in the product segment table; the specific competitive risk for smartphone market share is in Item 1A Risk Factors — pages apart in the filing.",
+    "why_interesting": "Semantic mismatch: 'iPhone revenue' and 'smartphone competitive risk' don't share vocabulary, so cosine similarity fails. PageIndex reasons across the tree."
+  },
+  {
+    "id": "q8",
+    "type": "cross_reference",
+    "difficulty": "hard",
+    "label": "AAPL_FY2024",
+    "question": "The MD&A section references Note 7 for income tax details. What does Note 7 say about the European Commission State Aid Decision and its financial impact?",
+    "ground_truth": "Note 7 explains that Apple recorded a one-time income tax charge of $10.2 billion (net) in FY2024 related to the European Commission State Aid Decision, which required repayment of alleged state aid received from Ireland. This was the primary driver of the higher effective tax rate in FY2024.",
+    "ground_truth_keywords": ["10.2", "State Aid", "Ireland", "European Commission"],
+    "explanation": "Explicitly tests cross-reference following. The MD&A says 'refer to Note 7' — traditional RAG cannot follow this pointer. PageIndex navigates the tree to Note 7.",
+    "why_interesting": "Directly demonstrates the cross-reference blindness failure mode of chunked RAG. PageIndex's tree navigation follows the internal document reference."
+  },
+  {
+    "id": "q9",
+    "type": "cross_section",
+    "difficulty": "medium",
+    "label": "AAPL_FY2024",
+    "question": "How much did Apple return to shareholders through buybacks and dividends in fiscal 2024?",
+    "ground_truth": "Apple repurchased $94,949 million of common stock and paid $15.2 billion in dividends and dividend equivalents in fiscal 2024.",
+    "ground_truth_keywords": ["94,949", "15.2"],
+    "explanation": "Buyback figures are in the cash flow statement; dividend figures are in the MD&A or shareholder return section — different parts of the filing.",
+    "why_interesting": "Finance interviewers love capital allocation questions. Requires combining cash flow data with the dividend discussion."
+  },
+  {
+    "id": "q10",
+    "type": "multi_hop",
+    "difficulty": "hard",
+    "label": "AAPL_FY2024",
+    "question": "Apple's total gross margin improved in fiscal 2024. What drove the improvement, and which segment — Products or Services — has the higher gross margin percentage?",
+    "ground_truth": "Total gross margin improved to 46.2% in FY2024 from 44.1% in FY2023. Services gross margin (73.9%) is significantly higher than Products gross margin (37.2%). The improvement was driven by cost savings in the Products segment and the growing mix of higher-margin Services revenue.",
+    "ground_truth_keywords": ["46.2", "73.9", "37.2", "cost savings"],
+    "explanation": "Requires the segment margin table (Item 8) AND the MD&A gross margin discussion explaining the drivers — two separate sections.",
+    "why_interesting": "Shows PageIndex's ability to synthesize a narrative (why margins improved) with the supporting data (the actual percentages) from different sections."
+  }
+]
