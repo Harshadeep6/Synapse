@@ -216,8 +216,6 @@ st.divider()
 
 # -- Sidebar ------------------------------------------------------------------
 with st.sidebar:
-    st.header("\u2699\ufe0f Settings")
-
     # ── Document section ──────────────────────────────────────────────────────
     st.markdown("---")
     st.subheader("Document")
