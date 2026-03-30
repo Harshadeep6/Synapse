@@ -49,9 +49,27 @@ st.markdown("""
 <style>
     :root { color-scheme: light dark; }
 
-    .main-header { font-size: 2.2rem; font-weight: 700; margin-bottom: 0; }
+    .main-header {
+        font-size: clamp(2.2rem, 4.5vw, 4rem) !important;
+        font-weight: 900 !important;
+        line-height: 1 !important;
+        margin: 0.5rem 0 0 0 !important;
+        padding: 0 !important;
+        letter-spacing: -3px !important;
+        background: linear-gradient(90deg, #17a2b8, #7b61ff, #e05fc4, #17a2b8);
+        background-size: 300% auto;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        animation: shimmer 4s linear infinite;
+        display: block !important;
+    }
+    @keyframes shimmer {
+        0%   { background-position: 0% center; }
+        100% { background-position: 300% center; }
+    }
     .sub-header {
-        font-size: 1rem;
+        font-size: 1.1rem;
         color: color-mix(in srgb, currentColor 55%, transparent);
         margin-top: 0; margin-bottom: 1.5rem;
     }
@@ -113,6 +131,7 @@ st.markdown("""
         margin-top: 6px;
     }
     .stButton button { width: 100%; font-size: 1rem; font-weight: 600; }
+    h1 a, h2 a, h3 a { display: none !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -188,7 +207,7 @@ def _badge_label(answer: str, question: dict) -> str:
 
 
 # -- Header -------------------------------------------------------------------
-st.markdown('<p class="main-header">\U0001f4ca Synapse</p>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">Synapse</h1>', unsafe_allow_html=True)
 st.markdown(
     '<p class="sub-header">Traditional RAG vs PageIndex RAG \u2014 live side-by-side comparison on SEC 10-K filings</p>',
     unsafe_allow_html=True,
